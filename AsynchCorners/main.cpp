@@ -22,6 +22,7 @@ int main(int argc, char** argv)
 	imshow("Image", image); // Show our image inside it.
 	cv::waitKey(1); //allow pause to display the image
 
+	std::cout << "LOADING IMAGES" << std::endl;
 	constexpr int c_imageCount = 1356;  //hardcoded to number of images in 'shapes_translation'
 	cv::Mat images[c_imageCount];
 	double timestamps[c_imageCount];
@@ -36,12 +37,13 @@ int main(int argc, char** argv)
 	int image_index = 0;
 	double image_timestamp = -1;
 
+	std::cout << "DISPLAYING VIDEO" << std::endl;
 	for (int i = 0; i < c_imageCount; i++) {
 		imshow("Image", images[i]); // Show our image inside it.
 		cv::waitKey(1); //allow pause to display the image
 	}
 
-	std::cout << "BEGIN\n";
+	std::cout << "PROCESSING EVENT DATA" << std::endl;
 	if (infile.is_open()) {
 		std::string line;
 		double lastPrintedTimestamp = -999999;
@@ -64,7 +66,7 @@ int main(int argc, char** argv)
 			}
 		}
 		infile.close();
-		std::cout << "END\n";
+		std::cout << "PROCESSING COMPLETE, PROGRAM FINISHED" << std::endl;
 		cv::waitKey(0); // Wait for a keystroke in the window
 	}
 
