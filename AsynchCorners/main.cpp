@@ -48,6 +48,7 @@ int main(int argc, char** argv)
 	std::cout << "PROCESSING EVENT DATA" << std::endl;
 
 	int image_index = -1;
+	int next_image_index = 0;
 	double image_timestamp = -1;
 
 	std::ifstream infile("cam_data/shapes_translation/events.txt");  //takes form of 'timestamp x y polarity'
@@ -56,6 +57,8 @@ int main(int argc, char** argv)
 
 		std::string line;
 		double lastPrintedTimestamp = -999999;
+		cv::Vec3b onColour = cv::Vec3b(255, 0, 0);
+		cv::Vec3b offColour = cv::Vec3b(0, 0, 255);
 		while (getline(infile, line)) {
 
 			std::istringstream iss(line);
@@ -81,9 +84,18 @@ int main(int argc, char** argv)
 			{
 				//update the displayed image
 				image_index = std::min(image_index + 1, c_imageCount);
+				next_image_index = std::min(next_image_index + 1, c_imageCount);
 				image_timestamp = timestamps[image_index];
 				cv::imshow("Image", images[image_index]); // Show our image inside it.
 				cv::waitKey(1); //allow pause to display the image
+			}
+
+			if (polarity < 1)
+			{
+				images[next_image_index].at<cv::Vec3b>(y, x) = offColour;
+			}
+			else {
+				images[next_image_index].at<cv::Vec3b>(y, x) = onColour;
 			}
 
 		}
