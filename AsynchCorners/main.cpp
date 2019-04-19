@@ -9,42 +9,51 @@
 
 int main(int argc, char** argv)
 {
-	std::ifstream infile("cam_data/shapes_translation/events.txt");  //takes form of 'timestamp x y polarity'
-
-	cv::Mat image;
-	image = cv::imread("cam_data/shapes_translation/images/frame_00000000.png", cv::IMREAD_COLOR); // Read image
-	if (image.empty()) // Check for invalid input
-	{
-		std::cout << "Could not open or find the image" << std::endl;
-		return -1;
-	}
-	cv::namedWindow("Image", cv::WINDOW_AUTOSIZE); // Create a window for display.
-	imshow("Image", image); // Show our image inside it.
-	cv::waitKey(1); //allow pause to display the image
-
 	std::cout << "LOADING IMAGES" << std::endl;
+
 	constexpr int c_imageCount = 1356;  //hardcoded to number of images in 'shapes_translation'
 	cv::Mat images[c_imageCount];
 	double timestamps[c_imageCount];
-	for (int i=0; i < c_imageCount; i++)
-	{
-		std::stringstream ss;
-		ss << "cam_data/shapes_translation/images/frame_" << std::setfill('0') << std::setw(8) << i << ".png";
-		const cv::String filename = ss.str().c_str();
-		images[i] = cv::imread(filename, cv::IMREAD_COLOR);
+
+	std::ifstream imageListFile("cam_data/shapes_translation/images.txt");  //takes form of 'timestamp imageFileName'
+	if (imageListFile.is_open()) {
+		std::string line;
+		int index = 0;
+		while (getline(imageListFile, line)) {
+
+			std::istringstream iss(line);
+
+			double timestamp;
+			std::string imageFileName;
+			if (!(iss >> timestamp >> imageFileName)) {
+				//error
+				break;
+			}
+			std::string fullFileName = "cam_data/shapes_translation/" + imageFileName;
+			const cv::String filename = fullFileName.c_str();
+			images[index] = cv::imread(filename, cv::IMREAD_COLOR);
+			if (images[index].empty()) // Check for invalid input
+			{
+				std::cout << "Could not open or find the image" << std::endl;
+				return -1;
+			}
+			timestamps[index] = timestamp;
+			index += 1;
+		}
+		imageListFile.close();
 	}
 
-	int image_index = 0;
+	cv::namedWindow("Image", cv::WINDOW_AUTOSIZE); // Create a window for display.
+	
+	std::cout << "PROCESSING EVENT DATA" << std::endl;
+
+	int image_index = -1;
 	double image_timestamp = -1;
 
-	std::cout << "DISPLAYING VIDEO" << std::endl;
-	for (int i = 0; i < c_imageCount; i++) {
-		imshow("Image", images[i]); // Show our image inside it.
-		cv::waitKey(1); //allow pause to display the image
-	}
+	std::ifstream infile("cam_data/shapes_translation/events.txt");  //takes form of 'timestamp x y polarity'
 
-	std::cout << "PROCESSING EVENT DATA" << std::endl;
 	if (infile.is_open()) {
+
 		std::string line;
 		double lastPrintedTimestamp = -999999;
 		while (getline(infile, line)) {
@@ -55,15 +64,28 @@ int main(int argc, char** argv)
 			int x;
 			int y;
 			int polarity;
+
 			if (!(iss >> timestamp >> x >> y >> polarity)) {
 				//error
 				break;
 			}
+
 			if (timestamp - lastPrintedTimestamp > 0.1)
 			{
+				//update the printed timestamp
 				std::cout << "timestamp=" << timestamp << "\n";
 				lastPrintedTimestamp = timestamp;
 			}
+
+			if (timestamp > image_timestamp)
+			{
+				//update the displayed image
+				image_index = std::min(image_index + 1, c_imageCount);
+				image_timestamp = timestamps[image_index];
+				cv::imshow("Image", images[image_index]); // Show our image inside it.
+				cv::waitKey(1); //allow pause to display the image
+			}
+
 		}
 		infile.close();
 		std::cout << "PROCESSING COMPLETE, PROGRAM FINISHED" << std::endl;
