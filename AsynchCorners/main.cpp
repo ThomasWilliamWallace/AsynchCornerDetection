@@ -5,6 +5,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
+#include <iomanip>
 
 int main(int argc, char** argv)
 {
@@ -21,9 +22,29 @@ int main(int argc, char** argv)
 	imshow("Image", image); // Show our image inside it.
 	cv::waitKey(1); //allow pause to display the image
 
+	constexpr int c_imageCount = 1356;  //hardcoded to number of images in 'shapes_translation'
+	cv::Mat images[c_imageCount];
+	double timestamps[c_imageCount];
+	for (int i=0; i < c_imageCount; i++)
+	{
+		std::stringstream ss;
+		ss << "cam_data/shapes_translation/images/frame_" << std::setfill('0') << std::setw(8) << i << ".png";
+		const cv::String filename = ss.str().c_str();
+		images[i] = cv::imread(filename, cv::IMREAD_COLOR);
+	}
+
+	int image_index = 0;
+	double image_timestamp = -1;
+
+	for (int i = 0; i < c_imageCount; i++) {
+		imshow("Image", images[i]); // Show our image inside it.
+		cv::waitKey(1); //allow pause to display the image
+	}
+
 	std::cout << "BEGIN\n";
 	if (infile.is_open()) {
 		std::string line;
+		double lastPrintedTimestamp = -999999;
 		while (getline(infile, line)) {
 
 			std::istringstream iss(line);
@@ -36,7 +57,11 @@ int main(int argc, char** argv)
 				//error
 				break;
 			}
-			std::cout << "timestamp=" << timestamp << "\n";
+			if (timestamp - lastPrintedTimestamp > 0.1)
+			{
+				std::cout << "timestamp=" << timestamp << "\n";
+				lastPrintedTimestamp = timestamp;
+			}
 		}
 		infile.close();
 		std::cout << "END\n";
