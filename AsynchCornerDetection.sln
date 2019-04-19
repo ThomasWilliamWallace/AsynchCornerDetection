@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AsynchCornerDetection", "AsynchCornerDetection\AsynchCornerDetection.vcxproj", "{860A2287-996D-443A-BCD8-E0081A3C17C1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenCV_intro", "AsynchCornerDetection\AsynchCornerDetection.vcxproj", "{860A2287-996D-443A-BCD8-E0081A3C17C1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AsynchCorners", "AsynchCorners\AsynchCorners.vcxproj", "{6994FAF1-8BDE-48F2-8680-21D028F0838E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{860A2287-996D-443A-BCD8-E0081A3C17C1}.Release|x64.Build.0 = Release|x64
 		{860A2287-996D-443A-BCD8-E0081A3C17C1}.Release|x86.ActiveCfg = Release|Win32
 		{860A2287-996D-443A-BCD8-E0081A3C17C1}.Release|x86.Build.0 = Release|Win32
+		{6994FAF1-8BDE-48F2-8680-21D028F0838E}.Debug|x64.ActiveCfg = Debug|x64
+		{6994FAF1-8BDE-48F2-8680-21D028F0838E}.Debug|x64.Build.0 = Debug|x64
+		{6994FAF1-8BDE-48F2-8680-21D028F0838E}.Debug|x86.ActiveCfg = Debug|Win32
+		{6994FAF1-8BDE-48F2-8680-21D028F0838E}.Debug|x86.Build.0 = Debug|Win32
+		{6994FAF1-8BDE-48F2-8680-21D028F0838E}.Release|x64.ActiveCfg = Release|x64
+		{6994FAF1-8BDE-48F2-8680-21D028F0838E}.Release|x64.Build.0 = Release|x64
+		{6994FAF1-8BDE-48F2-8680-21D028F0838E}.Release|x86.ActiveCfg = Release|Win32
+		{6994FAF1-8BDE-48F2-8680-21D028F0838E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
