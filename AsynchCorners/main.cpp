@@ -6,14 +6,14 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include <iomanip>
+#include <vector>
 
 int main(int argc, char** argv)
 {
 	std::cout << "LOADING IMAGES" << std::endl;
 
-	constexpr int c_imageCount = 1356;  //hardcoded to number of images in 'shapes_translation'
-	cv::Mat images[c_imageCount];
-	double timestamps[c_imageCount];
+	std::vector<cv::Mat> images_vec;
+	std::vector<double> timestamps_vec;
 
 	std::ifstream imageListFile("cam_data/shapes_translation/images.txt");  //takes form of 'timestamp imageFileName'
 	if (imageListFile.is_open()) {
@@ -31,13 +31,13 @@ int main(int argc, char** argv)
 			}
 			std::string fullFileName = "cam_data/shapes_translation/" + imageFileName;
 			const cv::String filename = fullFileName.c_str();
-			images[index] = cv::imread(filename, cv::IMREAD_COLOR);
-			if (images[index].empty()) // Check for invalid input
+			images_vec.push_back(cv::imread(filename, cv::IMREAD_COLOR));
+			if (images_vec[index].empty()) // Check for invalid input
 			{
 				std::cout << "Could not open or find the image" << std::endl;
 				return -1;
 			}
-			timestamps[index] = timestamp;
+			timestamps_vec.push_back(timestamp);
 			index += 1;
 		}
 		imageListFile.close();
@@ -83,19 +83,19 @@ int main(int argc, char** argv)
 			if (timestamp > image_timestamp)
 			{
 				//update the displayed image
-				image_index = std::min(image_index + 1, c_imageCount);
-				next_image_index = std::min(next_image_index + 1, c_imageCount);
-				image_timestamp = timestamps[image_index];
-				cv::imshow("Image", images[image_index]); // Show our image inside it.
+				image_index = std::min(image_index + 1, static_cast<int>(images_vec.size()));
+				next_image_index = std::min(next_image_index + 1, static_cast<int>(images_vec.size()));
+				image_timestamp = timestamps_vec[image_index];
+				cv::imshow("Image", images_vec[image_index]); // Show our image inside it.
 				cv::waitKey(1); //allow pause to display the image
 			}
 
 			if (polarity < 1)
 			{
-				images[next_image_index].at<cv::Vec3b>(y, x) = offColour;
+				images_vec[next_image_index].at<cv::Vec3b>(y, x) = offColour;
 			}
 			else {
-				images[next_image_index].at<cv::Vec3b>(y, x) = onColour;
+				images_vec[next_image_index].at<cv::Vec3b>(y, x) = onColour;
 			}
 
 		}
