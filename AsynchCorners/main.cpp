@@ -57,8 +57,8 @@ int main(int argc, char** argv)
 
 		std::string line;
 		double lastPrintedTimestamp = -999999;
-		cv::Vec3b onColour = cv::Vec3b(255, 0, 0);
-		cv::Vec3b offColour = cv::Vec3b(0, 0, 255);
+		cv::Vec3b onColour = cv::Vec3b(0, 0, 255);
+		cv::Vec3b offColour = cv::Vec3b(255, 0, 0);
 		while (getline(infile, line)) {
 
 			std::istringstream iss(line);
