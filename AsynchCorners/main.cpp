@@ -7,7 +7,7 @@
 #include "Event.hpp"
 #include "Image_sequence.hpp"
 
-double UpdateDisplay(double timestamp, double last_printed_timestamp, cv::Mat &display_image, Image_sequence &image_sequence, int current_image_index)
+double UpdateDisplay(double timestamp, double last_printed_timestamp, cv::Mat display_image, Image_sequence &image_sequence, int current_image_index)
 {
 	if (timestamp - last_printed_timestamp > 0.01)
 	{
