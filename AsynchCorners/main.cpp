@@ -73,13 +73,6 @@ int main(int argc, char** argv)
 				break;
 			}
 
-			if (timestamp - lastPrintedTimestamp > 0.1)
-			{
-				//update the printed timestamp
-				std::cout << "timestamp=" << timestamp << "\n";
-				lastPrintedTimestamp = timestamp;
-			}
-
 			if (timestamp > image_timestamp)
 			{
 				//update the displayed image
@@ -87,15 +80,25 @@ int main(int argc, char** argv)
 				next_image_index = std::min(next_image_index + 1, static_cast<int>(images_vec.size()));
 				image_timestamp = timestamps_vec[image_index];
 				cv::imshow("Image", images_vec[image_index]); // Show our image inside it.
-				cv::waitKey(1); //allow pause to display the image
+				cv::waitKey(1); //trigger the display of the image
 			}
 
+			//paint event onto image
 			if (polarity < 1)
 			{
-				images_vec[next_image_index].at<cv::Vec3b>(y, x) = offColour;
+				images_vec[image_index].at<cv::Vec3b>(y, x) = offColour;
 			}
 			else {
-				images_vec[next_image_index].at<cv::Vec3b>(y, x) = onColour;
+				images_vec[image_index].at<cv::Vec3b>(y, x) = onColour;
+			}
+
+			if (timestamp - lastPrintedTimestamp > 0.001)
+			{
+				//update the displayed image and printed timestamp
+				cv::imshow("Image", images_vec[image_index]);
+				std::cout << "timestamp=" << timestamp << "\n";
+				lastPrintedTimestamp = timestamp;
+				cv::waitKey(1); //trigger the display of the image
 			}
 
 		}
