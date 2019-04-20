@@ -7,6 +7,19 @@
 #include "Event.hpp"
 #include "Image_sequence.hpp"
 
+double UpdateDisplay(double timestamp, double last_printed_timestamp, cv::Mat &display_image, Image_sequence &image_sequence, int current_image_index)
+{
+	if (timestamp - last_printed_timestamp > 0.01)
+	{
+		//update the displayed image and printed timestamp
+		cv::imshow("Video", display_image);
+		display_image = image_sequence.m_image_data[current_image_index].m_image.clone();
+		//std::cout << "timestamp=" << timestamp << "\n";
+		cv::waitKey(1); //trigger the display of the image
+		return timestamp;
+	}
+}
+
 int main(int argc, char** argv)
 {
 	std::cout << "LOADING IMAGES" << std::endl;
@@ -16,7 +29,7 @@ int main(int argc, char** argv)
 	cv::namedWindow("Video", cv::WINDOW_AUTOSIZE); // Create a window for display.
 	
 	std::cout << "PROCESSING EVENT DATA" << std::endl;
-		int current_image_index = 0;
+	int current_image_index = 0;
 	int next_image_index = 1;
 	double image_timestamp = -1;
 
@@ -44,15 +57,13 @@ int main(int argc, char** argv)
 
 			event.print(display_image);
 
-			if (event.m_timestamp - last_printed_timestamp > 0.01)
-			{
-				//update the displayed image and printed timestamp
-				cv::imshow("Video", display_image);
-				display_image = image_sequence.m_image_data[current_image_index].m_image.clone();
-				//std::cout << "timestamp=" << timestamp << "\n";
-				last_printed_timestamp = event.m_timestamp;
-				cv::waitKey(1); //trigger the display of the image
-			}
+			last_printed_timestamp = UpdateDisplay(
+										event.m_timestamp,
+										last_printed_timestamp,
+										display_image,
+										image_sequence,
+										current_image_index
+									);
 
 		}
 		infile.close();
