@@ -4,7 +4,7 @@
 
 class Image_sequence {
 public:
-	std::vector<Image_data> image_data;
+	std::vector<Image_data> m_image_data;
 
 	Image_sequence(std::string image_sequence_path);
 };

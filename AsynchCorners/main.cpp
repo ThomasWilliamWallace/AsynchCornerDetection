@@ -16,8 +16,7 @@ int main(int argc, char** argv)
 	cv::namedWindow("Video", cv::WINDOW_AUTOSIZE); // Create a window for display.
 	
 	std::cout << "PROCESSING EVENT DATA" << std::endl;
-
-	int current_image_index = 0;
+		int current_image_index = 0;
 	int next_image_index = 1;
 	double image_timestamp = -1;
 
@@ -27,7 +26,7 @@ int main(int argc, char** argv)
 
 		std::string line;
 		double last_printed_timestamp = -999999;
-		cv::Mat display_image = image_sequence.image_data[0].m_image.clone();
+		cv::Mat display_image = image_sequence.m_image_data[0].m_image.clone();
 		while (getline(infile, line)) {
 
 			std::istringstream iss(line);
@@ -38,9 +37,9 @@ int main(int argc, char** argv)
 			{
 				//select next image for display
 				current_image_index = next_image_index;
-				next_image_index = std::min(next_image_index + 1, static_cast<int>(image_sequence.image_data.size()));
-				display_image = image_sequence.image_data[current_image_index].m_image.clone();
-				image_timestamp = image_sequence.image_data[next_image_index].m_timestamp;
+				next_image_index = std::min(next_image_index + 1, static_cast<int>(image_sequence.m_image_data.size()));
+				display_image = image_sequence.m_image_data[current_image_index].m_image.clone();
+				image_timestamp = image_sequence.m_image_data[next_image_index].m_timestamp;
 			}
 
 			event.print(display_image);
@@ -49,7 +48,7 @@ int main(int argc, char** argv)
 			{
 				//update the displayed image and printed timestamp
 				cv::imshow("Video", display_image);
-				display_image = image_sequence.image_data[current_image_index].m_image.clone();
+				display_image = image_sequence.m_image_data[current_image_index].m_image.clone();
 				//std::cout << "timestamp=" << timestamp << "\n";
 				last_printed_timestamp = event.m_timestamp;
 				cv::waitKey(1); //trigger the display of the image

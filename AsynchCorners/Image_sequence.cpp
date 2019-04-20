@@ -22,8 +22,8 @@ Image_sequence::Image_sequence(std::string image_sequence_path)
 			}
 			std::string full_filename = "cam_data/shapes_translation/" + image_filename;
 			const cv::String filename = full_filename.c_str();
-			image_data.emplace_back(cv::imread(filename, cv::IMREAD_COLOR), timestamp);
-			if (image_data[index].m_image.empty()) // Check for invalid input
+			m_image_data.emplace_back(cv::imread(filename, cv::IMREAD_COLOR), timestamp);
+			if (m_image_data[index].m_image.empty()) // Check for invalid input
 			{
 				std::cout << "Could not open or find the image" << std::endl;
 				throw - 1;
