@@ -6,7 +6,7 @@ const cv::Vec3b off_colour = cv::Vec3b(255, 0, 0);
 Event::Event(std::istringstream &iss)
 {
 	//read event from file
-	if (!(iss >> timestamp >> x >> y >> polarity)) {
+	if (!(iss >> m_timestamp >> m_x >> m_y >> m_polarity)) {
 		//error
 		throw 1;
 	}
@@ -15,11 +15,11 @@ Event::Event(std::istringstream &iss)
 void Event::print(cv::Mat &display_image)
 {
 	//paint event onto display image
-	if (polarity < 1)
+	if (m_polarity < 1)
 	{
-		display_image.at<cv::Vec3b>(y, x) = off_colour;
+		display_image.at<cv::Vec3b>(m_y, m_x) = off_colour;
 	}
 	else {
-		display_image.at<cv::Vec3b>(y, x) = on_colour;
+		display_image.at<cv::Vec3b>(m_y, m_x) = on_colour;
 	}
 }

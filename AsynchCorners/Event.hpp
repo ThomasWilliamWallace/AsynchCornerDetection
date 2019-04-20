@@ -6,10 +6,10 @@
 
 class Event {
 public:
-	double timestamp;
-	int x;
-	int y;
-	int polarity;
+	double m_timestamp;
+	int m_x;
+	int m_y;
+	int m_polarity;
 
 	Event(std::istringstream &iss);
 	void print(cv::Mat &display_image);

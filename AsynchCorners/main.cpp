@@ -8,13 +8,13 @@
 #include <iomanip>
 #include <vector>
 #include "Event.hpp"
+#include "Image_data.hpp"
 
 int main(int argc, char** argv)
 {
 	std::cout << "LOADING IMAGES" << std::endl;
 
-	std::vector<cv::Mat> images_vec;
-	std::vector<double> timestamps_vec;
+	std::vector<Image_data> image_data;
 
 	std::ifstream image_list_file("cam_data/shapes_translation/images.txt");  //takes form of 'timestamp imageFileName'
 	if (image_list_file.is_open()) {
@@ -32,13 +32,12 @@ int main(int argc, char** argv)
 			}
 			std::string full_filename = "cam_data/shapes_translation/" + image_filename;
 			const cv::String filename = full_filename.c_str();
-			images_vec.push_back(cv::imread(filename, cv::IMREAD_COLOR));
-			if (images_vec[index].empty()) // Check for invalid input
+			image_data.emplace_back(cv::imread(filename, cv::IMREAD_COLOR), timestamp);
+			if (image_data[index].m_image.empty()) // Check for invalid input
 			{
 				std::cout << "Could not open or find the image" << std::endl;
 				return -1;
 			}
-			timestamps_vec.push_back(timestamp);
 			index += 1;
 		}
 		image_list_file.close();
@@ -58,31 +57,31 @@ int main(int argc, char** argv)
 
 		std::string line;
 		double last_printed_timestamp = -999999;
-		cv::Mat display_image = images_vec[0].clone();
+		cv::Mat display_image = image_data[0].m_image.clone();
 		while (getline(infile, line)) {
 
 			std::istringstream iss(line);
 
 			Event event(iss);
 
-			if (event.timestamp > image_timestamp)
+			if (event.m_timestamp > image_timestamp)
 			{
 				//select next image for display
 				current_image_index = next_image_index;
-				next_image_index = std::min(next_image_index + 1, static_cast<int>(images_vec.size()));
-				display_image = images_vec[current_image_index].clone();
-				image_timestamp = timestamps_vec[next_image_index];
+				next_image_index = std::min(next_image_index + 1, static_cast<int>(image_data.size()));
+				display_image = image_data[current_image_index].m_image.clone();
+				image_timestamp = image_data[next_image_index].m_timestamp;
 			}
 
 			event.print(display_image);
 
-			if (event.timestamp - last_printed_timestamp > 0.01)
+			if (event.m_timestamp - last_printed_timestamp > 0.01)
 			{
 				//update the displayed image and printed timestamp
 				cv::imshow("Video", display_image);
-				display_image = images_vec[current_image_index].clone();
+				display_image = image_data[current_image_index].m_image.clone();
 				//std::cout << "timestamp=" << timestamp << "\n";
-				last_printed_timestamp = event.timestamp;
+				last_printed_timestamp = event.m_timestamp;
 				cv::waitKey(1); //trigger the display of the image
 			}
 
