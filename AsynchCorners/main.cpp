@@ -7,6 +7,7 @@
 #include <opencv2/highgui.hpp>
 #include <iomanip>
 #include <vector>
+#include "Event.hpp"
 
 int main(int argc, char** argv)
 {
@@ -57,25 +58,20 @@ int main(int argc, char** argv)
 
 		std::string line;
 		double last_printed_timestamp = -999999;
-		cv::Vec3b on_colour = cv::Vec3b(0, 0, 255);
-		cv::Vec3b off_colour = cv::Vec3b(255, 0, 0);
 		cv::Mat display_image = images_vec[0].clone();
 		while (getline(infile, line)) {
 
 			std::istringstream iss(line);
 
-			double timestamp;
-			int x;
-			int y;
-			int polarity;
+			Event event;
 
 			//read event from file
-			if (!(iss >> timestamp >> x >> y >> polarity)) {
+			if (!(iss >> event.timestamp >> event.x >> event.y >> event.polarity)) {
 				//error
 				break;
 			}
 
-			if (timestamp > image_timestamp)
+			if (event.timestamp > image_timestamp)
 			{
 				//select next image for display
 				current_image_index = next_image_index;
@@ -84,22 +80,15 @@ int main(int argc, char** argv)
 				image_timestamp = timestamps_vec[next_image_index];
 			}
 
-			//paint event onto display image
-			if (polarity < 1)
-			{
-				display_image.at<cv::Vec3b>(y, x) = off_colour;
-			}
-			else {
-				display_image.at<cv::Vec3b>(y, x) = on_colour;
-			}
+			event.print(display_image);
 
-			if (timestamp - last_printed_timestamp > 0.02)
+			if (event.timestamp - last_printed_timestamp > 0.01)
 			{
 				//update the displayed image and printed timestamp
 				cv::imshow("Video", display_image);
 				display_image = images_vec[current_image_index].clone();
 				//std::cout << "timestamp=" << timestamp << "\n";
-				last_printed_timestamp = timestamp;
+				last_printed_timestamp = event.timestamp;
 				cv::waitKey(1); //trigger the display of the image
 			}
 
