@@ -15,22 +15,22 @@ int main(int argc, char** argv)
 	std::vector<cv::Mat> images_vec;
 	std::vector<double> timestamps_vec;
 
-	std::ifstream imageListFile("cam_data/shapes_translation/images.txt");  //takes form of 'timestamp imageFileName'
-	if (imageListFile.is_open()) {
+	std::ifstream image_list_file("cam_data/shapes_translation/images.txt");  //takes form of 'timestamp imageFileName'
+	if (image_list_file.is_open()) {
 		std::string line;
 		int index = 0;
-		while (getline(imageListFile, line)) {
+		while (getline(image_list_file, line)) {
 
 			std::istringstream iss(line);
 
 			double timestamp;
-			std::string imageFileName;
-			if (!(iss >> timestamp >> imageFileName)) {
+			std::string image_filename;
+			if (!(iss >> timestamp >> image_filename)) {
 				//error
 				break;
 			}
-			std::string fullFileName = "cam_data/shapes_translation/" + imageFileName;
-			const cv::String filename = fullFileName.c_str();
+			std::string full_filename = "cam_data/shapes_translation/" + image_filename;
+			const cv::String filename = full_filename.c_str();
 			images_vec.push_back(cv::imread(filename, cv::IMREAD_COLOR));
 			if (images_vec[index].empty()) // Check for invalid input
 			{
@@ -40,15 +40,15 @@ int main(int argc, char** argv)
 			timestamps_vec.push_back(timestamp);
 			index += 1;
 		}
-		imageListFile.close();
+		image_list_file.close();
 	}
 
-	cv::namedWindow("Image", cv::WINDOW_AUTOSIZE); // Create a window for display.
+	cv::namedWindow("Video", cv::WINDOW_AUTOSIZE); // Create a window for display.
 	
 	std::cout << "PROCESSING EVENT DATA" << std::endl;
 
-	int image_index = -1;
-	int next_image_index = 0;
+	int current_image_index = 0;
+	int next_image_index = 1;
 	double image_timestamp = -1;
 
 	std::ifstream infile("cam_data/shapes_translation/events.txt");  //takes form of 'timestamp x y polarity'
@@ -56,9 +56,10 @@ int main(int argc, char** argv)
 	if (infile.is_open()) {
 
 		std::string line;
-		double lastPrintedTimestamp = -999999;
-		cv::Vec3b onColour = cv::Vec3b(0, 0, 255);
-		cv::Vec3b offColour = cv::Vec3b(255, 0, 0);
+		double last_printed_timestamp = -999999;
+		cv::Vec3b on_colour = cv::Vec3b(0, 0, 255);
+		cv::Vec3b off_colour = cv::Vec3b(255, 0, 0);
+		cv::Mat display_image = images_vec[0].clone();
 		while (getline(infile, line)) {
 
 			std::istringstream iss(line);
@@ -68,6 +69,7 @@ int main(int argc, char** argv)
 			int y;
 			int polarity;
 
+			//read event from file
 			if (!(iss >> timestamp >> x >> y >> polarity)) {
 				//error
 				break;
@@ -75,29 +77,29 @@ int main(int argc, char** argv)
 
 			if (timestamp > image_timestamp)
 			{
-				//update the displayed image
-				image_index = std::min(image_index + 1, static_cast<int>(images_vec.size()));
+				//select next image for display
+				current_image_index = next_image_index;
 				next_image_index = std::min(next_image_index + 1, static_cast<int>(images_vec.size()));
-				image_timestamp = timestamps_vec[image_index];
-				cv::imshow("Image", images_vec[image_index]); // Show our image inside it.
-				cv::waitKey(1); //trigger the display of the image
+				display_image = images_vec[current_image_index].clone();
+				image_timestamp = timestamps_vec[next_image_index];
 			}
 
-			//paint event onto image
+			//paint event onto display image
 			if (polarity < 1)
 			{
-				images_vec[image_index].at<cv::Vec3b>(y, x) = offColour;
+				display_image.at<cv::Vec3b>(y, x) = off_colour;
 			}
 			else {
-				images_vec[image_index].at<cv::Vec3b>(y, x) = onColour;
+				display_image.at<cv::Vec3b>(y, x) = on_colour;
 			}
 
-			if (timestamp - lastPrintedTimestamp > 0.001)
+			if (timestamp - last_printed_timestamp > 0.02)
 			{
 				//update the displayed image and printed timestamp
-				cv::imshow("Image", images_vec[image_index]);
-				std::cout << "timestamp=" << timestamp << "\n";
-				lastPrintedTimestamp = timestamp;
+				cv::imshow("Video", display_image);
+				display_image = images_vec[current_image_index].clone();
+				//std::cout << "timestamp=" << timestamp << "\n";
+				last_printed_timestamp = timestamp;
 				cv::waitKey(1); //trigger the display of the image
 			}
 
