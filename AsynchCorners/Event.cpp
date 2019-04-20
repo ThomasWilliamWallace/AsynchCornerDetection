@@ -1,4 +1,5 @@
 #include "Event.hpp"
+#include <iostream>
 
 const cv::Vec3b on_colour = cv::Vec3b(0, 0, 255);
 const cv::Vec3b off_colour = cv::Vec3b(255, 0, 0);
@@ -7,8 +8,8 @@ Event::Event(std::istringstream &iss)
 {
 	//read event from file
 	if (!(iss >> m_timestamp >> m_x >> m_y >> m_polarity)) {
-		//error
-		throw 1;
+		std::cout << "Could not parse line from event file" << std::endl;
+		throw - 1;
 	}
 }
 

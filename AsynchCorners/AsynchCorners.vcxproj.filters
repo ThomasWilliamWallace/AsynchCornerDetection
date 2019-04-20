@@ -24,12 +24,18 @@
     <ClCompile Include="Image_data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Image_sequence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Image_data.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Image_sequence.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

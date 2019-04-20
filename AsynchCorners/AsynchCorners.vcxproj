@@ -120,10 +120,12 @@
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="Image_data.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Image_sequence.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event.hpp" />
     <ClInclude Include="Image_data.hpp" />
+    <ClInclude Include="Image_sequence.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
