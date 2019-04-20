@@ -3,6 +3,15 @@
 const cv::Vec3b on_colour = cv::Vec3b(0, 0, 255);
 const cv::Vec3b off_colour = cv::Vec3b(255, 0, 0);
 
+Event::Event(std::istringstream &iss)
+{
+	//read event from file
+	if (!(iss >> timestamp >> x >> y >> polarity)) {
+		//error
+		throw 1;
+	}
+}
+
 void Event::print(cv::Mat &display_image)
 {
 	//paint event onto display image

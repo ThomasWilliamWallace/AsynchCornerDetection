@@ -63,13 +63,7 @@ int main(int argc, char** argv)
 
 			std::istringstream iss(line);
 
-			Event event;
-
-			//read event from file
-			if (!(iss >> event.timestamp >> event.x >> event.y >> event.polarity)) {
-				//error
-				break;
-			}
+			Event event(iss);
 
 			if (event.timestamp > image_timestamp)
 			{
