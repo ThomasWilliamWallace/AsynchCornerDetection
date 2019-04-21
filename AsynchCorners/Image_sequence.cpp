@@ -17,7 +17,7 @@ Image_sequence::Image_sequence(std::string image_sequence_path)
 			double timestamp;
 			std::string image_filename;
 			if (!(iss >> timestamp >> image_filename)) {
-				std::cout << "Could not parse line from images file" << std::endl;
+				std::cout << "ERROR: Could not parse line from images file" << std::endl;
 				throw - 1;
 			}
 			std::string full_filename = "cam_data/shapes_translation/" + image_filename;
@@ -25,7 +25,7 @@ Image_sequence::Image_sequence(std::string image_sequence_path)
 			m_image_data.emplace_back(cv::imread(filename, cv::IMREAD_COLOR), timestamp);
 			if (m_image_data[index].m_image.empty()) // Check for invalid input
 			{
-				std::cout << "Could not open or find the image" << std::endl;
+				std::cout << "ERROR: Could not open or find the image" << std::endl;
 				throw - 1;
 			}
 			index += 1;

@@ -1,6 +1,7 @@
 #pragma once
 #include <opencv2/core.hpp>
 #include <sstream>
+#include "Sobel_filter.hpp"
 
 class Event {
 public:
@@ -10,5 +11,6 @@ public:
 	int m_polarity;
 
 	Event(std::istringstream &iss);
-	void print(cv::Mat &display_image);
+	void Print(cv::Mat &display_image);
+	void Update_filter(Sobel_filter &sobel_filter);
 };
