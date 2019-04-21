@@ -50,7 +50,7 @@ int main(int argc, char** argv)
 
 	// Create display windows
 	cv::namedWindow("events", cv::WINDOW_AUTOSIZE);
-	cv::namedWindow("display_sobel", cv::WINDOW_AUTOSIZE);
+	cv::namedWindow("sobel", cv::WINDOW_AUTOSIZE);
 	cv::namedWindow("harris", cv::WINDOW_AUTOSIZE);
 	cv::namedWindow("corners", cv::WINDOW_AUTOSIZE);
 	while (getline(infile, line)) {
@@ -80,7 +80,7 @@ int main(int argc, char** argv)
 			//update the displayed image and printed timestamp
 			cv::imshow("events", event_image);
 			sobel_filter.Update_for_display(event.m_timestamp);  //decay all pixels for display
-			cv::imshow("display_sobel", sobel_filter.m_display_mat);
+			cv::imshow("sobel", sobel_filter.m_display_mat);
 			harris_filter.Update_for_display(sobel_filter, event.m_timestamp);  //decay all pixels for display
 			cv::imshow("harris", harris_filter.m_mat);
 			cv::imshow("corners", corner_image);
