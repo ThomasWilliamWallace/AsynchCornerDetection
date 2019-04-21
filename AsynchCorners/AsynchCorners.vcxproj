@@ -117,6 +117,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Corner_suppression_field.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="Harris_filter.cpp" />
     <ClCompile Include="Sobel_filter.cpp" />
@@ -125,6 +126,7 @@
     <ClCompile Include="Image_sequence.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Corner_suppression_field.hpp" />
     <ClInclude Include="Event.hpp" />
     <ClInclude Include="Harris_filter.hpp" />
     <ClInclude Include="Sobel_filter.hpp" />

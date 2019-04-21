@@ -11,5 +11,4 @@ public:
 
 	Event(std::istringstream &iss);
 	void Print_event(cv::Mat &display_image);
-	//void Print_corner(Harris_filter &harris_filter, cv::Mat &display_image);
 };

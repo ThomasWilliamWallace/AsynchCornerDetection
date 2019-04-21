@@ -12,4 +12,5 @@ public:
 
 	Harris_filter(cv::Size size);
 	void Update(Sobel_filter &sobel_filter, Event &event);
+	//void Update2(Sobel_filter &sobel_filter, double timestamp);
 };

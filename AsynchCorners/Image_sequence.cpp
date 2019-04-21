@@ -20,7 +20,7 @@ Image_sequence::Image_sequence(std::string image_sequence_path)
 				std::cout << "ERROR: Could not parse line from images file" << std::endl;
 				throw - 1;
 			}
-			std::string full_filename = "cam_data/shapes_translation/" + image_filename;
+			std::string full_filename = "cam_data/hdr_boxes/" + image_filename;
 			const cv::String filename = full_filename.c_str();
 			m_image_data.emplace_back(cv::imread(filename, cv::IMREAD_COLOR), timestamp);
 			if (m_image_data[index].m_image.empty()) // Check for invalid input

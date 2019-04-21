@@ -6,7 +6,7 @@ Sobel_filter::Sobel_filter(cv::Size size)
 	m_display_mat = cv::Mat(size, CV_64FC3, cv::Scalar(0, 0, 0));
 }
 
-constexpr double alpha = 2 * CV_PI;
+constexpr double alpha = 10 * CV_PI;
 constexpr double c = 0.1;
 
 cv::Mat sobel_x_kernel = (cv::Mat_<int>(5, 5) <<
@@ -15,14 +15,14 @@ cv::Mat sobel_x_kernel = (cv::Mat_<int>(5, 5) <<
 	0, -2, 0, 2, 0,
 	0, -1, 0, 1, 0,
 	0, 0, 0, 0, 0
-	);
+);
 cv::Mat sobel_y_kernel = (cv::Mat_<int>(5, 5) <<
 	0, 0, 0, 0, 0,
 	0, -1, -2, -1, 0,
 	0, 0, 0, 0, 0,
 	0, 1, 2, 1, 0,
 	0, 0, 0, 0, 0
-	);
+);
 
 void Sobel_filter::Update(Event &event)
 {

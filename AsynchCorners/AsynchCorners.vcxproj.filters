@@ -33,6 +33,9 @@
     <ClCompile Include="Harris_filter.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="Corner_suppression_field.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event.hpp">
@@ -49,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="Harris_filter.hpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Corner_suppression_field.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

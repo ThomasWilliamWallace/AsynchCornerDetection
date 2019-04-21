@@ -8,11 +8,27 @@
 #include "Image_sequence.hpp"
 #include "Sobel_filter.hpp"
 #include "Harris_filter.hpp"
+#include "Corner_suppression_field.hpp"
+#include <opencv2/imgproc.hpp>
+
+void Print_corner(Event &event, Harris_filter &harris_filter, cv::Mat &display_image)
+//void Print_corner(Event &event, Harris_filter &harris_filter, Corner_suppression_field &corner_suppression_field, cv::Mat &display_image)
+{
+	//if (harris_filter.m_mat.at<double>(event.m_y, event.m_x) > 3 + corner_suppression_field.m_mat.at<cv::Vec3d>(event.m_y / suppress_scale, event.m_x / suppress_scale)[0])
+	if (harris_filter.m_mat.at<double>(event.m_y, event.m_x) > 2)
+	{
+		//paint corner onto display image
+		cv::circle(display_image, cv::Point(event.m_x, event.m_y), 3, cv::Scalar(0, 255, 0), 1, 8, 0);
+
+		//now suppress corners from this region. This effect should have an exponential decay, using alpha.
+		//corner_suppression_field.Update(event);
+	}
+}
 
 int main(int argc, char** argv)
 {
 	std::cout << "LOADING IMAGES" << std::endl;
-	std::string image_sequence_path = "cam_data/shapes_translation/images.txt";
+	std::string image_sequence_path = "cam_data/hdr_boxes/images.txt";
 	Image_sequence image_sequence(image_sequence_path);
 
 	std::cout << "PROCESSING EVENT DATA" << std::endl;
@@ -20,7 +36,7 @@ int main(int argc, char** argv)
 	int next_image_index = 1;
 	double image_timestamp = -1;
 
-	std::ifstream infile("cam_data/shapes_translation/events.txt");  //takes form of 'timestamp x y polarity'
+	std::ifstream infile("cam_data/hdr_boxes/events.txt");  //takes form of 'timestamp x y polarity'
 	if (!infile.is_open()) {
 		std::cout << "ERROR: Could not open the event file." << std::endl;
 		throw - 1;
@@ -32,11 +48,14 @@ int main(int argc, char** argv)
 	cv::Mat corner_image = image_sequence.m_image_data[0].m_image.clone();
 	Sobel_filter sobel_filter(image_sequence.m_image_data[0].m_image.size());
 	Harris_filter harris_filter(image_sequence.m_image_data[0].m_image.size());
-	cv::namedWindow("events", cv::WINDOW_AUTOSIZE); // Create a window for display.
-	//cv::namedWindow("sobel", cv::WINDOW_AUTOSIZE); // Create a window for display.
-	cv::namedWindow("display_sobel", cv::WINDOW_AUTOSIZE); // Create a window for display.
-	cv::namedWindow("harris", cv::WINDOW_AUTOSIZE); // Create a window for display.
-	//cv::namedWindow("corners", cv::WINDOW_AUTOSIZE); // Create a window for display.
+	//Corner_suppression_field corner_suppression_field(image_sequence.m_image_data[0].m_image.size());
+
+	// Create display windows
+	cv::namedWindow("events", cv::WINDOW_AUTOSIZE);
+	cv::namedWindow("display_sobel", cv::WINDOW_AUTOSIZE);
+	cv::namedWindow("harris", cv::WINDOW_AUTOSIZE);
+	cv::namedWindow("corners", cv::WINDOW_AUTOSIZE);
+	//cv::namedWindow("corner_suppression", cv::WINDOW_AUTOSIZE);
 	while (getline(infile, line)) {
 
 		std::istringstream iss(line);
@@ -54,24 +73,23 @@ int main(int argc, char** argv)
 		}
 
 		event.Print_event(event_image);
-		//event.print(corner_image);
 		sobel_filter.Update(event);
-		//event.Update_harris_filter(harris_filter, sobel_filter);
-		//event.Print_corner(harris_filter, corner_image);
 		harris_filter.Update(sobel_filter, event);
+		Print_corner(event, harris_filter, corner_image);
+		//Print_corner(event, harris_filter, corner_suppression_field, corner_image);
 
 		if (event.m_timestamp - last_printed_timestamp > 0.01)
 		{
 			//update the displayed image and printed timestamp
 			cv::imshow("events", event_image);
-			//cv::imshow("sobel", sobel_filter.m_mat);
-			sobel_filter.Update_for_display(event.m_timestamp);
-			cv::imshow("display_sobel", sobel_filter.m_display_mat);  //TODO decay all pixels for display
+			sobel_filter.Update_for_display(event.m_timestamp);  //decay all pixels for display
+			cv::imshow("display_sobel", sobel_filter.m_display_mat);
 			cv::imshow("harris", harris_filter.m_mat);
-			//cv::imshow("corners", corner_image);
+			cv::imshow("corners", corner_image);
+			//corner_suppression_field.Update_for_display(event.m_timestamp);  //decay all pixels for display
+			//cv::imshow("corner_suppression", corner_suppression_field.m_mat);
 			event_image = image_sequence.m_image_data[current_image_index].m_image.clone();
 			corner_image = image_sequence.m_image_data[current_image_index].m_image.clone();
-			//std::cout << "timestamp=" << timestamp << "\n";
 			last_printed_timestamp = event.m_timestamp;
 			cv::waitKey(1); //trigger the display of the image
 		}
