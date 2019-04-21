@@ -22,6 +22,7 @@ void Print_corner(Event &event, Harris_filter &harris_filter, cv::Mat &display_i
 int main(int argc, char** argv)
 {
 	std::string cam_data_path = "cam_data/hdr_boxes/";
+	//std::string cam_data_path = "cam_data/outdoors_running/";
 	//std::string cam_data_path = "cam_data/shapes_translation/";
 
 	std::cout << "LOADING IMAGES" << std::endl;
