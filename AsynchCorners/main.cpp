@@ -21,16 +21,19 @@ void Print_corner(Event &event, Harris_filter &harris_filter, cv::Mat &display_i
 
 int main(int argc, char** argv)
 {
+	std::string cam_data_path = "cam_data/hdr_boxes/";
+	//std::string cam_data_path = "cam_data/shapes_translation/";
+
 	std::cout << "LOADING IMAGES" << std::endl;
-	std::string image_sequence_path = "cam_data/hdr_boxes/images.txt";
-	Image_sequence image_sequence(image_sequence_path);
+	Image_sequence image_sequence(cam_data_path);
 
 	std::cout << "PROCESSING EVENT DATA" << std::endl;
 	int current_image_index = 0;
 	int next_image_index = 1;
 	double image_timestamp = -1;
 
-	std::ifstream infile("cam_data/hdr_boxes/events.txt");  //takes form of 'timestamp x y polarity'
+	std::string events_path = cam_data_path + "events.txt";
+	std::ifstream infile(events_path);  //takes form of 'timestamp x y polarity'
 	if (!infile.is_open()) {
 		std::cout << "ERROR: Could not open the event file." << std::endl;
 		throw - 1;
