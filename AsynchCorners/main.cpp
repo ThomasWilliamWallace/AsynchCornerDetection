@@ -78,6 +78,7 @@ int main(int argc, char** argv)
 			cv::imshow("events", event_image);
 			sobel_filter.Update_for_display(event.m_timestamp);  //decay all pixels for display
 			cv::imshow("display_sobel", sobel_filter.m_display_mat);
+			harris_filter.Update_for_display(sobel_filter, event.m_timestamp);  //decay all pixels for display
 			cv::imshow("harris", harris_filter.m_mat);
 			cv::imshow("corners", corner_image);
 			event_image = image_sequence.m_image_data[current_image_index].m_image.clone();

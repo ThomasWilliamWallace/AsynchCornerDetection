@@ -24,6 +24,7 @@ void Harris_filter::Update(Sobel_filter &sobel_filter, Event &event)
 				int y = v + event.m_y - 1;
 				if (y >= 0 && y < sobel_filter.m_mat.rows)
 				{
+					//TODO possibly use gaussian spread here?
 					sum_ix2 += sobel_filter.m_mat.at<cv::Vec3d>(y, x)[0] * sobel_filter.m_mat.at<cv::Vec3d>(y, x)[0];
 					sum_iy2 += sobel_filter.m_mat.at<cv::Vec3d>(y, x)[1] * sobel_filter.m_mat.at<cv::Vec3d>(y, x)[1];
 					sum_ixy += sobel_filter.m_mat.at<cv::Vec3d>(y, x)[0] * sobel_filter.m_mat.at<cv::Vec3d>(y, x)[1];
@@ -32,11 +33,21 @@ void Harris_filter::Update(Sobel_filter &sobel_filter, Event &event)
 		}
 	}
 
-	//TODO possibly add some gaussian spread here?
-
 	double determinant = sum_ix2 * sum_iy2 - sum_ixy * sum_ixy;
 	double trace = sum_ix2 + sum_iy2;
 	double harris_response = (determinant - k * pow(trace, 2));
 
 	m_mat.at<double>(event.m_y, event.m_x) = harris_response;
+}
+
+void Harris_filter::Update_for_display(Sobel_filter &sobel_filter, double timestamp)
+{
+	for (int i = 0; i < m_mat.cols; i++)
+	{
+		for (int j = 0; j < m_mat.rows; j++)
+		{
+			Event event = Event(i, j, 1, timestamp);
+			Update(sobel_filter, event);
+		}
+	}
 }

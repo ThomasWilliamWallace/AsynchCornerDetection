@@ -15,6 +15,14 @@ Event::Event(std::istringstream &iss)
 	m_polarity = m_polarity ? 1 : -1;
 }
 
+Event::Event(int x, int y, int polarity, double timestamp) :
+	m_x(x),
+	m_y(y),
+	m_polarity(polarity),
+	m_timestamp(timestamp)
+{
+}
+
 void Event::Print_event(cv::Mat &display_image)
 {
 	//paint event onto display image

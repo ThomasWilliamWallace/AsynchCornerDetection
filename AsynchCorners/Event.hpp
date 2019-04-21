@@ -10,5 +10,6 @@ public:
 	int m_polarity;
 
 	Event(std::istringstream &iss);
+	Event(int x, int y, int polarity, double timestamp);
 	void Print_event(cv::Mat &display_image);
 };
