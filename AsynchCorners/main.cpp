@@ -7,14 +7,13 @@
 #include "Event.hpp"
 #include "Image_sequence.hpp"
 #include "Sobel_filter.hpp"
+#include "Harris_filter.hpp"
 
 int main(int argc, char** argv)
 {
 	std::cout << "LOADING IMAGES" << std::endl;
 	std::string image_sequence_path = "cam_data/shapes_translation/images.txt";
 	Image_sequence image_sequence(image_sequence_path);
-	cv::namedWindow("events", cv::WINDOW_AUTOSIZE); // Create a window for display.
-	cv::namedWindow("corners", cv::WINDOW_AUTOSIZE); // Create a window for display.
 
 	std::cout << "PROCESSING EVENT DATA" << std::endl;
 	int current_image_index = 0;
@@ -32,8 +31,12 @@ int main(int argc, char** argv)
 	cv::Mat event_image = image_sequence.m_image_data[0].m_image.clone();
 	cv::Mat corner_image = image_sequence.m_image_data[0].m_image.clone();
 	Sobel_filter sobel_filter(image_sequence.m_image_data[0].m_image.size());
-	cv::namedWindow("sobel", cv::WINDOW_AUTOSIZE); // Create a window for display.
+	Harris_filter harris_filter(image_sequence.m_image_data[0].m_image.size());
+	cv::namedWindow("events", cv::WINDOW_AUTOSIZE); // Create a window for display.
+	//cv::namedWindow("sobel", cv::WINDOW_AUTOSIZE); // Create a window for display.
 	cv::namedWindow("display_sobel", cv::WINDOW_AUTOSIZE); // Create a window for display.
+	cv::namedWindow("harris", cv::WINDOW_AUTOSIZE); // Create a window for display.
+	cv::namedWindow("corners", cv::WINDOW_AUTOSIZE); // Create a window for display.
 	while (getline(infile, line)) {
 
 		std::istringstream iss(line);
@@ -50,17 +53,20 @@ int main(int argc, char** argv)
 			image_timestamp = image_sequence.m_image_data[next_image_index].m_timestamp;
 		}
 
-		event.Print(event_image);
+		event.Print_event(event_image);
 		//event.print(corner_image);
-		event.Update_filter(sobel_filter);
+		event.Update_sobel_filter(sobel_filter);
+		event.Update_harris_filter(harris_filter, sobel_filter);
+		event.Print_corner(harris_filter, corner_image);
 
 		if (event.m_timestamp - last_printed_timestamp > 0.01)
 		{
 			//update the displayed image and printed timestamp
 			cv::imshow("events", event_image);
+			//cv::imshow("sobel", sobel_filter.m_mat);
+			cv::imshow("display_sobel", sobel_filter.m_display_mat);  //TODO decay all pixels for display
+			cv::imshow("harris", harris_filter.m_mat);
 			cv::imshow("corners", corner_image);
-			cv::imshow("sobel", sobel_filter.m_mat);
-			cv::imshow("display_sobel", sobel_filter.m_display_mat);
 			event_image = image_sequence.m_image_data[current_image_index].m_image.clone();
 			corner_image = image_sequence.m_image_data[current_image_index].m_image.clone();
 			//std::cout << "timestamp=" << timestamp << "\n";

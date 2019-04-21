@@ -30,6 +30,9 @@
     <ClCompile Include="Sobel_filter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Harris_filter.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event.hpp">
@@ -43,6 +46,9 @@
     </ClInclude>
     <ClInclude Include="Sobel_filter.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Harris_filter.hpp">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

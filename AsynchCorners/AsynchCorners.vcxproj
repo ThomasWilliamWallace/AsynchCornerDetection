@@ -118,6 +118,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Event.cpp" />
+    <ClCompile Include="Harris_filter.cpp" />
     <ClCompile Include="Sobel_filter.cpp" />
     <ClCompile Include="Image_data.cpp" />
     <ClCompile Include="main.cpp" />
@@ -125,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Event.hpp" />
+    <ClInclude Include="Harris_filter.hpp" />
     <ClInclude Include="Sobel_filter.hpp" />
     <ClInclude Include="Image_data.hpp" />
     <ClInclude Include="Image_sequence.hpp" />
