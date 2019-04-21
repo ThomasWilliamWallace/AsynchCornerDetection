@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 	//cv::namedWindow("sobel", cv::WINDOW_AUTOSIZE); // Create a window for display.
 	cv::namedWindow("display_sobel", cv::WINDOW_AUTOSIZE); // Create a window for display.
 	cv::namedWindow("harris", cv::WINDOW_AUTOSIZE); // Create a window for display.
-	cv::namedWindow("corners", cv::WINDOW_AUTOSIZE); // Create a window for display.
+	//cv::namedWindow("corners", cv::WINDOW_AUTOSIZE); // Create a window for display.
 	while (getline(infile, line)) {
 
 		std::istringstream iss(line);
@@ -55,18 +55,20 @@ int main(int argc, char** argv)
 
 		event.Print_event(event_image);
 		//event.print(corner_image);
-		event.Update_sobel_filter(sobel_filter);
-		event.Update_harris_filter(harris_filter, sobel_filter);
-		event.Print_corner(harris_filter, corner_image);
+		sobel_filter.Update(event);
+		//event.Update_harris_filter(harris_filter, sobel_filter);
+		//event.Print_corner(harris_filter, corner_image);
+		harris_filter.Update(sobel_filter, event);
 
 		if (event.m_timestamp - last_printed_timestamp > 0.01)
 		{
 			//update the displayed image and printed timestamp
 			cv::imshow("events", event_image);
 			//cv::imshow("sobel", sobel_filter.m_mat);
+			sobel_filter.Update_for_display(event.m_timestamp);
 			cv::imshow("display_sobel", sobel_filter.m_display_mat);  //TODO decay all pixels for display
 			cv::imshow("harris", harris_filter.m_mat);
-			cv::imshow("corners", corner_image);
+			//cv::imshow("corners", corner_image);
 			event_image = image_sequence.m_image_data[current_image_index].m_image.clone();
 			corner_image = image_sequence.m_image_data[current_image_index].m_image.clone();
 			//std::cout << "timestamp=" << timestamp << "\n";
