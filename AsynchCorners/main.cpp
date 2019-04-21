@@ -32,13 +32,15 @@ int main(int argc, char** argv)
 	int next_image_index = 1;
 	double image_timestamp = -1;
 
+	//Open events file
 	std::string events_path = cam_data_path + "events.txt";
-	std::ifstream infile(events_path);  //takes form of 'timestamp x y polarity'
+	std::ifstream infile(events_path);
 	if (!infile.is_open()) {
 		std::cout << "ERROR: Could not open the event file." << std::endl;
 		throw - 1;
 	}
 
+	//Init filters
 	std::string line;
 	double last_printed_timestamp = -999999;
 	cv::Mat event_image = image_sequence.m_image_data[0].m_image.clone();
@@ -67,6 +69,7 @@ int main(int argc, char** argv)
 			image_timestamp = image_sequence.m_image_data[next_image_index].m_timestamp;
 		}
 
+		//Event response
 		event.Print_event(event_image);
 		sobel_filter.Update(event);
 		harris_filter.Update(sobel_filter, event);

@@ -7,7 +7,7 @@
 Image_sequence::Image_sequence(std::string cam_data_path)
 {
 	std::string image_sequence_path = cam_data_path + "images.txt";
-	std::ifstream image_list_file(image_sequence_path.c_str());  //takes form of 'timestamp imageFileName'
+	std::ifstream image_list_file(image_sequence_path.c_str());
 	if (image_list_file.is_open()) {
 		std::string line;
 		int index = 0;
@@ -17,7 +17,7 @@ Image_sequence::Image_sequence(std::string cam_data_path)
 
 			double timestamp;
 			std::string image_filename;
-			if (!(iss >> timestamp >> image_filename)) {
+			if (!(iss >> timestamp >> image_filename)) {  // each line takes the form of 'timestamp imageFileName'
 				std::cout << "ERROR: Could not parse line from images file" << std::endl;
 				throw - 1;
 			}

@@ -8,7 +8,7 @@ const cv::Vec3b off_colour = cv::Vec3b(255, 0, 0);
 Event::Event(std::istringstream &iss)
 {
 	//read event from file
-	if (!(iss >> m_timestamp >> m_x >> m_y >> m_polarity)) {
+	if (!(iss >> m_timestamp >> m_x >> m_y >> m_polarity)) {   //each line takes the form of 'timestamp x y polarity'
 		std::cout << "ERROR: Could not parse line from event file" << std::endl;
 		throw - 1;
 	}
